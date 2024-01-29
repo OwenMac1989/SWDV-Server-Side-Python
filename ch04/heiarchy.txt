@@ -1,0 +1,5 @@
+                        Future Value Main Function
+                        /                         \
+                       /                           \
+                    Get_Float                   Get_Int
+                    
