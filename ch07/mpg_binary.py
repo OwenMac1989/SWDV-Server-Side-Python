@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# import pickle
+import pickle
 import csv
 import datetime
 from sqlite3 import Date
@@ -18,15 +18,14 @@ def get_gallons_used():
         print("Entry must be greater than zero. Please try again.\n")
     return gallons_used
 
-def write_trip(main_list):
-    with open("Trip.csv", "w", newline="") as file:
-        writer = csv.writer(file)
-        writer.writerows(main_list)
+def write_Milege(main_list):
+        with open("Trip.bin", "wb") as file:
+            pickle.dump(main_list, file)
 
 def read_trip():
     opened_trip = [[]]
-    with open("Trip.csv", newline="") as file:
-        reader = csv.reader(file)
+    with open("Trip.bin", "rb") as file:
+        reader = pickle.load(file)
         for row in reader:
             opened_trip.append(row)
     return opened_trip

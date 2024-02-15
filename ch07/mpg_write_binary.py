@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# import pickle
+import pickle
 import csv
 import datetime
 from sqlite3 import Date
@@ -19,12 +19,9 @@ def get_gallons_used():
     return gallons_used
 
 def write_Milege(main_list):
-    with open("MPG.csv", "w", newline="") as file:
-        writer = csv.writer(file)
-        writer.writerow(main_list)
+        with open("Trip.bin", "wb") as file:
+            pickle.dump(main_list, file)
 
-    # with open(FILENAME, "wb") as file:
-    #     pickle.dump(main_list, file)
         
 def main():
     # display a welcome message
