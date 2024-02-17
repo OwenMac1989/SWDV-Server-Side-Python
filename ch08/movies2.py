@@ -1,3 +1,5 @@
+from ast import While
+from asyncio.windows_events import NULL
 import csv
 import sys
 
@@ -16,17 +18,22 @@ def read_movies():
                 movies.append(row)
         return movies
     except FileNotFoundError as e:
-        print(f"Could not find {FILENAME} file.")
-        exit_program()
+        # print(f"Could not find {FILENAME} file.")
+        # exit_program()
+        return movies
     except Exception as e:
         print(type(e), e)
         exit_program()
 
 def write_movies(movies):
     try:
+        # raise BlockingIOError
         with open(FILENAME, "w", newline="") as file:
             writer = csv.writer(file)
             writer.writerows(movies)
+    except OSError as e:
+        print(type(e), e)
+        exit_program()
     except Exception as e:
         print(type(e), e)
         exit_program()
@@ -37,8 +44,21 @@ def list_movies(movies):
     print()
     
 def add_movie(movies):
-    name = input("Name: ")
-    year = input("Year: ")
+    userInput = "N"
+    while userInput.lower() == "n":
+        name = input("Name: ")
+        if name == "" or name == NULL:
+            print("Invalid name try again!")
+            continue
+        try:
+            year = int(input("Year: "))
+        except ValueError:
+            print("Invalid number")
+            continue
+        if year < 0 :
+            print("Invalid year, must be greater than 0!")
+            continue
+        userInput = "y"
     movie = [name, year]
     movies.append(movie)
     write_movies(movies)
@@ -70,9 +90,9 @@ def display_menu():
     print()    
 
 def main():
-    display_menu()
     movies = read_movies()
-    while True:        
+    while True:
+        display_menu()        
         command = input("Command: ")
         if command.lower() == "list":
             list_movies(movies)
