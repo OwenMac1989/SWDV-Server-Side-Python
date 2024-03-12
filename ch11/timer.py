@@ -8,18 +8,20 @@ def main():
 
     # start timer
     input("Press Enter to start...")
-    start_time = datetime.now()
+    start = datetime.now()
+    start_time = start.strftime("%H:%M:%S:%f")
     print("Start time:", start_time)
     print()
     
     # stop timer
-    input("Press Enter to stop...")    
-    stop_time = datetime.now()
+    input("Press Enter to stop...")  
+    stop = datetime.now()  
+    stop_time = stop.strftime("%H:%M:%S:%f")
     print("Stop time: ", stop_time)
     print()
 
     # calculate elapsed time
-    elapsed_time = stop_time - start_time
+    elapsed_time = stop - start
     days = elapsed_time.days
     minutes = elapsed_time.seconds // 60
     seconds = elapsed_time.seconds % 60
@@ -30,13 +32,16 @@ def main():
     minutes = minutes % 60
 
     # create time object
-    time_object = time(hours, minutes, seconds, microseconds)
+    time_object = time(hours, minutes, seconds)
 
     # display results
     print("ELAPSED TIME")
     if days > 0:
         print("Days:", days)
-    print("Time:", time_object)
+    if time_object > 0:
+        print("Time:", time_object)
+    else:
+        print("Please try again detected no non-zero values!")
 
 if __name__ == "__main__":
     main()

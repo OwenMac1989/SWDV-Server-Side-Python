@@ -1,12 +1,23 @@
 #!/usr/bin/env python3
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 def get_invoice_date():
-    invoice_date_str = input("Enter the invoice date (MM/DD/YY): ")    
-    invoice_date = datetime.strptime(invoice_date_str, "%m/%d/%y")
-    return invoice_date
-
+    again = "y"
+    while again.lower() == "y":
+        invoice_date_str = input("Enter the invoice date (MM/DD/YYYY): ")
+        if invoice_date_str.find(" ") != -1:
+            print("No spaces allowed")
+        try:
+            invoice_date = datetime.strptime(invoice_date_str, "%m/%d/%Y")
+            if datetime.now() <= invoice_date :
+                print(" Invoice Date must not be greated than todays date.")
+            else:
+                again = "N"
+        except ValueError:
+            print("Must follow (MM/DD/YYYY)")
+    else:
+        return invoice_date
 def main():
     print("The Invoice Due Date program")
     print()
@@ -17,8 +28,12 @@ def main():
         print()
 
         # calculate due date and days overdue
-        due_date = invoice_date + timedelta(days=30)
-        current_date = datetime.now()
+        invDay = invoice_date.day
+        invMon = invoice_date.month
+        invYear = invoice_date.year
+        invDate = date(invYear, invMon, invDay)
+        due_date = invDate + timedelta(days=30)
+        current_date = date.today()
         days_overdue = (current_date - due_date).days
 
         # display results
