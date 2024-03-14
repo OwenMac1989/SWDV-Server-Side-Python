@@ -5,24 +5,33 @@ def list(movie_list):
         print("There are no movies in the list.\n")
         return
     else:
-        for i, movie in enumerate(movie_list, start=1):
-            print(f"{i}. {movie[0]} ({movie[1]})")
+        count = 0 
+        for i in movie_list:
+            movie = i["name"]
+            year = i["year"]
+            count += 1
+            print(f"Movie {count}: ")
+            print(f"Name: {movie}")
+            print(f"Year: {year} \n")
         print()
 
 def add(movie_list):
     name = input("Name: ")
     year = input("Year: ")
-    movie = [name, year]
+    movie = {"name": name, "year": year}
     movie_list.append(movie)
-    print(f"{movie[0]} was added.\n")
+    index = len(movie_list)
+    valid = movie_list[index - 1]["name"]
+    print(f"{valid} was added.\n")
     
 def delete(movie_list):
     number = int(input("Number: "))
     if number < 1 or number > len(movie_list):
         print("Invalid movie number.\n")
     else:
-        movie = movie_list.pop(number-1)
-        print(f"{movie[0]} was deleted.\n")
+        valid = movie_list[number-1]["name"]
+        movie = movie_list.remove(movie_list[number-1])
+        print(f"{valid} was deleted.\n")
 
 def display_menu():
     print("COMMAND MENU")
@@ -33,9 +42,14 @@ def display_menu():
     print()    
         
 def main():
-    movie_list = [["Monty Python and the Holy Grail", 1975],
-                  ["On the Waterfront", 1954],
-                  ["Cat on a Hot Tin Roof", 1958]]
+    movie_list = [
+            {"name" : "Monty Python and the Holy Grail",
+             "year" : 1975},
+            {"name" : "On the Waterfront", 
+             "year" : 1954},
+            {"name" : "Cat on a Hot Tin Roof",
+             "year" : 1958}
+    ]
     
     display_menu()
     

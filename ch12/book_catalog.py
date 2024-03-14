@@ -39,11 +39,21 @@ def delete_book(book_catalog):
     else:
         print(f"{title} doesn't exist in the catalog.")
 
+def list_books(book_catalog):
+    for i in book_catalog:
+        author = book_catalog[i] ["author"]
+        pub_year = book_catalog[i] ["pubyear"]
+        print(f"Title: {i}")
+        print(f"Author: {author}")
+        print(f"Pub Year: {pub_year} \n")
+    
+
 def display_menu():
     print("The Book Catalog program")
     print()
     print("COMMAND MENU")
     print("show - Show book info")
+    print("list - List Books")
     print("add -  Add book")
     print("edit - Edit book")
     print("del -  Delete book")
@@ -73,6 +83,8 @@ def main():
             add_edit_book(book_catalog, mode="edit")
         elif command == "del":
             delete_book(book_catalog)
+        elif command == "list":
+            list_books(book_catalog)
         elif command == "exit":
             print("Bye!")
             break
