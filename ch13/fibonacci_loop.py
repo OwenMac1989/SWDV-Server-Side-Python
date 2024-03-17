@@ -13,7 +13,7 @@ def fib(n):
     return fib
 
 def main():
-    for i in range(16):
+    for i in range(100):
         print(fib(i), end=", ")
     print("...")
 
