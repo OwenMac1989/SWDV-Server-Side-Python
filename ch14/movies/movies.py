@@ -1,20 +1,22 @@
 #!/usr/bin/env python3
 
+from getMovie import Movie
+
 def list(movie_list):
     if len(movie_list) == 0:
         print("There are no movies in the list.\n")
         return
     else:
-        for i, row in enumerate(movie_list, start=1):
-            print(f"{i}. {row[0]} ({row[1]})")
+        for i, movie in enumerate(movie_list, start=1):
+            print(f"{i}. {movie.getStr()}")
         print()
 
 def add(movie_list):
-    name = input("Name: ")
-    year = input("Year: ")
-    movie = [name, year]
+    title = input("Name: ")
+    year =  input("Year: ")
+    movie = Movie(title, year)
     movie_list.append(movie)
-    print(f"{movie[0]} was added.\n")   
+    print(f"{movie.title} was added.\n")   
 
 def delete(movie_list):
     number = int(input("Number: "))
@@ -22,7 +24,7 @@ def delete(movie_list):
         print("Invalid movie number.\n")
     else:
         movie = movie_list.pop(number-1)
-        print(f"{movie[0]} was deleted.\n")
+        print(f"{movie.title} was deleted.\n")
       
 def display_menu():
     print("COMMAND MENU")
@@ -33,9 +35,9 @@ def display_menu():
     print()    
 
 def main():
-    movie_list = [["Monty Python and the Holy Grail", 1975],
-                  ["On the Waterfront", 1954],
-                  ["Cat on a Hot Tin Roof", 1958]]
+    movie_list = [Movie("Monty Python and the Holy Grail", 1975),
+                  Movie("On the Waterfront", 1954),
+                  Movie("Cat on a Hot Tin Roof", 1958)]
 
     display_menu()
     
