@@ -23,6 +23,7 @@ def readPlayers():
                 counter += 1
         return players
     except FileNotFoundError:
+        print("File could not be found!!!")
         with open(FILENAME, "w", newline="") as file:
             print("Creating File")
         return players
