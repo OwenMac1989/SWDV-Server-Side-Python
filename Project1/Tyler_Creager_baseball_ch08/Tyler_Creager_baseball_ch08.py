@@ -83,13 +83,22 @@ def menu():
 ## Player Manipulation
 # list[0] name, [1] position, [2] bats, [3] hits, [4] average
 def battingAverage(bats: int, hits: int):
+    average:float
     try:
-        average:float
-        average = float(hits / bats)
+        hitsF = float(hits)
+        batsF = float(bats)
+        average = hitsF / batsF
         roundedAvg = round(average, 3)
+    except ZeroDivisionError:
+        average = 0 
+        roundedAvg = 0
         return roundedAvg
     except ValueError:
-        print("Invalid Number")
+        print("Invalid input")
+    return roundedAvg
+
+
+
 
 
 def getPlayerInfo(positions:tuple, name:str, position:str):
@@ -113,7 +122,7 @@ def getPlayerInfo(positions:tuple, name:str, position:str):
 
         while positionValid != True:
             try:
-                position = input("Player's Position: ")
+                position = input("Player's Position: ").lower()
                 if position == "" or position == " ":
                     print("Must provide a valid position")
                 else:
@@ -188,11 +197,11 @@ def getPlayer(positions:tuple):
     (name, position) = playerInfo
     (bats, hits) = playerStats
 
-    
     avg = battingAverage(bats, hits)
     batsStr = str(bats)
     hitsStr = str(hits)
     avgStr = str(avg)
+
 
     playerX.append(name)
     playerX.append(position)
