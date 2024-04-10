@@ -1,32 +1,43 @@
 #!/usr/bin/env python3
 
+from turtle import position
 from Tyler_Creager_file_ch10 import *
 ## UI
 def intro():
 
     title = "Baseball Team Manager"
     presentTitle = title.center(60)
-    summary = "This program calculates the batting average for a player\n based"\
-    " on the player's official number of at bats and hits."
+    summary = "This program calculates the batting average for a player based" "\n on the player's official number of at bats and hits."
+    
     divider()
     print(presentTitle)
-    print(f"\n {summary}")
+    print()
+    print(f"{summary:^30}")
+    print()
     divider()
 
 
 def divider():
     sep = "="
-    for i in range (60):
+    for i in range (100):
         print(sep, end='')
     print()
 
 def menu():
 
     positions: tuple = ("C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "P")
+    placeholder:str = ""
     players = readPlayers()
-    menuOptions = f"MENU OPTIONS:\nDisp- Display LineUp.\nAdd- Add Player.\nRemove- Remove Player.\nMove- Move Player.\nEdit- Edit Player Position\n" \
-    "Edit Stat- Edit Player Stats\nHelp- Display Commands\nExit- Exit Program"
+    menuOptions = f"MENU OPTIONS:\nDisp - Display LineUp.\nAdd - Add Player.\nRemove - Remove Player.\nMove - Move Player.\nEdit - Edit Player Position\n" \
+    "Edit Stat - Edit Player Stats\nHelp - Display Commands\nExit - Exit Program"
     print(menuOptions)
+    for i in positions:
+        if i == "P":
+            placeholder += i
+        else:
+            placeholder += i
+            placeholder += ", "
+    print(f"\nPositions: {placeholder}")
     cont = True
 
     while cont == True:
@@ -39,6 +50,7 @@ def menu():
 
 
         if userInput.lower() == "disp":
+            defineTable()
             for playerX in players:
                 displayPlayer(players[playerX])
                 print()
@@ -309,7 +321,17 @@ def deletePlayer(players:dict):
             players.pop(counter)
             deleteConfirm = True
             return players
-
+def defineTable():
+    player = "Player's name:"
+    position = "Player Position:"
+    bats = "Official number of at bats:"
+    hits = "Number of hits:"
+    avg = "Batting average:"
+    sep ="-"
+    for i in range(125):
+        print(sep, end='')
+    print()        
+    print(f"{player:<20}{position:<20}{bats:<30}{hits:<20}{avg:<20}")
 
 # list[0] name, [1] position, [2] bats, [3] hits, [4] average
 def displayPlayer(playerX:list ):
@@ -319,7 +341,8 @@ def displayPlayer(playerX:list ):
     bats = playerX[2]
     hits = playerX[3]
     avg = playerX[4]
-    readPlayer = f"Player's name: {name}\nPlayer Position: {position}\nOfficial number of at bats: {bats}\nNumber of hits: {hits}\nBatting average: {avg}"
+    readPlayer = f"{name:<20}{position:<20}{bats:<30}{hits:<20}{avg:<20}"
+    print()
     print(readPlayer)
 
 
