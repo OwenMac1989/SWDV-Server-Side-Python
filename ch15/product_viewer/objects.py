@@ -16,15 +16,29 @@ class Product:
         return self.name
 
 @dataclass
-class Book(Product):
+class Media(Product):
+    format:str = ""
+    year:int = 0
+    def getDescription(self):
+       return f"{Product.getDescription(self)} ({self.year}) - [{self.format}]"
+
+@dataclass
+class Book(Media):
     author:str = ""
 
     def getDescription(self):
-        return f"{Product.getDescription(self)} by {self.author}"
+       return f"{Media.getDescription(self)} by {self.author}"
 
 @dataclass        
-class Movie(Product):
-    year:int = 0
+class Movie(Media):
 
     def getDescription(self):
-        return f"{Product.getDescription(self)} ({self.year})"
+        return f"{Media.getDescription(self)}"
+
+@dataclass        
+class Album(Media):
+
+    artist:str = ""
+
+    def getDescription(self):
+        return f"{Media.getDescription(self)} by {self.artist}"

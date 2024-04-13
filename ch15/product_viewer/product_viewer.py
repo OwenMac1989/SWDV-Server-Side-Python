@@ -1,4 +1,4 @@
-from objects import Product, Book, Movie
+from objects import Product, Book, Movie, Album, Media
 
 def show_products(products):
     print("PRODUCTS")
@@ -14,6 +14,10 @@ def show_product(product):
         print(f"{'Author:':{w}}{product.author}")
     if isinstance(product, Movie):
         print(f"{'Year:':{w}}{product.year}")
+    if isinstance(product, Album):
+        print(f"{'Year:':{w}}{product.year}")
+    if isinstance(product,Media):
+        print(f"{'Format:':{w}}{product.format}")
     print(f"{'Discount price:':{w}}{product.getDiscountPrice():.2f}")
     print()
 
@@ -22,8 +26,8 @@ def main():
     print()
     
     products = (Product("Stanley 13 Ounce Wood Hammer", 12.99, 62),
-                Book("The Big Short", 15.95, 34, "Michael Lewis"),
-                Movie("The Holy Grail - DVD", 14.99, 68, 1975))
+                Book("The Big Short", 15.95, 34, "Hardcover", 1990, "Michael Lewis"),
+                Movie("The Holy Grail", 14.99, 68, "DVD", 1975, ), Album("Yet Again", 12.99, 5, "CD", 2010, "Mammy Jammy",))
     show_products(products)
 
     choice = "y"
