@@ -5,7 +5,7 @@ class Product:
     name:str = ""
     price:float = 0.0
     discountPercent:int = 0
-
+    
     def getDiscountAmount(self):
         return self.price * self.discountPercent / 100
 

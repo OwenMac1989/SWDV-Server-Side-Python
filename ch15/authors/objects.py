@@ -12,19 +12,33 @@ class Authors:
     @property
     def count(self):
         return len(self.__list)
+    def __str__(self):
+        ## aStr = String of Authors
+        aStr = ""
+        ##a = Author
+        for a in self.__list:
+            aStr += str(a) + ", "
+        aStr = aStr[:-2]
+        return aStr
+    def __iter__(self):
+        for a in self.__list:
+            yield a
     
 @dataclass
 class Book:
     title:str = ""
     authors:Authors = None
 
-    def getDescription(self):
+    def __str__(self):
         return f"{self.title} by {self.authors}"
     
 @dataclass
 class Author:
     firstName:str = ""
     lastName:str = ""
+    def __str__(self):
+        s = self
+        return f"{s.firstName} {s.lastName}"
 
 
 
