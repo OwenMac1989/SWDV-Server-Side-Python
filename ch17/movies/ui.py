@@ -51,6 +51,12 @@ def display_movies_by_year():
     movies = db.get_movies_by_year(year)
     display_movies(movies, str(year))
 
+def display_movies_by_minutes():
+    minutes = int(input("Minutes: "))
+    print()
+    movies = db.get_movies_by_minutes(minutes)
+    display_movies(movies, str(minutes))
+
 def add_movie():
     name        = input("Name: ")
     year        = int(input("Year: "))
@@ -68,24 +74,34 @@ def add_movie():
 
 def delete_movie():
     movie_id = int(input("Movie ID: "))
-    db.delete_movie(movie_id)
-    print("Movie ID " + str(movie_id) + " was deleted from database.\n")
-        
+    movie = get_movie(movie_id)
+    print("You have selected:")
+    for i in movie:
+        print(f"{i}")
+    user_input = input("Are you sure you want to Delete the Movie? (y/n)")
+    if user_input.lower() == "y":
+        db.delete_movie(movie_id)
+        print("Movie ID " + str(movie_id) + " was deleted from database.\n")
+    else:
+        print("Movie was not deleted, returning to menu.")
+          
 def main():
     db.connect()
     display_title()
     display_categories()
     while True:        
         command = input("Command: ")
-        if command == "cat":
+        if command.lower() == "cat":
             display_movies_by_category()
-        elif command == "year":
+        elif command.lower() == "year":
             display_movies_by_year()
-        elif command == "add":
+        elif command.lower() == "minutes":
+            display_movies_by_year()
+        elif command.lower() == "add":
             add_movie()
-        elif command == "del":
+        elif command.lower() == "del":
             delete_movie()
-        elif command == "exit":
+        elif command.lower() == "exit":
             break
         else:
             print("Not a valid command. Please try again.\n")
