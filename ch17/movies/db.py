@@ -9,7 +9,7 @@ conn = None
 def connect():
     global conn
     if not conn:
-        DB_FILE = "/murach/python/_db/movies.sqlite"
+        DB_FILE = "_db/movies.sqlite"
         conn = sqlite3.connect(DB_FILE)
         conn.row_factory = sqlite3.Row
 
@@ -85,8 +85,8 @@ def get_movies_by_minutes(minutes):
                       Category.name as categoryName
                FROM Movie JOIN Category
                       ON Movie.categoryID = Category.categoryID
-               WHERE minutes <= 
-               ORDER BY minutes ASC?'''
+               WHERE minutes <= ? 
+               ORDER BY minutes ASC'''
     with closing(conn.cursor()) as c:
         c.execute(query, (minutes,))
         results = c.fetchall()

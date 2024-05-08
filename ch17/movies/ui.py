@@ -12,6 +12,7 @@ def display_menu():
     print("COMMAND MENU")
     print("cat  - View movies by category")
     print("year - View movies by year")
+    print("minutes - View movies by minutes")
     print("add  - Add a movie")
     print("del  - Delete a movie")
     print("exit - Exit program")
@@ -96,7 +97,7 @@ def main():
         elif command.lower() == "year":
             display_movies_by_year()
         elif command.lower() == "minutes":
-            display_movies_by_year()
+            display_movies_by_minutes()
         elif command.lower() == "add":
             add_movie()
         elif command.lower() == "del":
