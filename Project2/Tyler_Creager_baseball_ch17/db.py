@@ -5,6 +5,127 @@ from asyncio.windows_events import NULL
 import csv
 import sys
 from objects import *
+import sqlite3
+from contextlib import closing
+
+
+## Convert DB Methods for Baseball Manager to SQLite
+#-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-#
+conn = None
+
+def connect():
+    global conn
+    if not conn:
+        DB_FILE = "__BaseBallDB/BaseBallDB.sqlite"
+        conn = sqlite3.connect(DB_FILE)
+        conn.row_factory = sqlite3.Row
+
+def close():
+    if conn:
+        conn.close()
+
+def make_player(row):
+    return Player(row["firstName"], row["lastName"], row["batOrder"], row["position"], row["atBats"], row["hits"])
+
+
+def get_categories():
+    query = '''SELECT categoryID, name as categoryName
+               FROM Category'''
+    with closing(conn.cursor()) as c:
+        c.execute(query)
+        results = c.fetchall()
+
+    categories = []
+    for row in results:
+        categories.append(make_category(row))
+    return categories
+
+def get_category(category_id):
+    query = '''SELECT categoryID, name AS categoryName
+               FROM Category WHERE categoryID = ?'''
+    with closing(conn.cursor()) as c:
+        c.execute(query, (category_id,))
+        row = c.fetchone()
+        if row:
+            return make_category(row)
+        else:
+            return None
+
+def get_movies_by_category(category_id):
+    query = '''SELECT movieID, Movie.name, year, minutes,
+                      Movie.categoryID as categoryID,
+                      Category.name as categoryName
+               FROM Movie JOIN Category
+                      ON Movie.categoryID = Category.categoryID
+               WHERE Movie.categoryID = ?'''
+    with closing(conn.cursor()) as c:
+        c.execute(query, (category_id,))
+        results = c.fetchall()
+
+    movies = []
+    for row in results:
+        movies.append(make_movie(row))
+    return movies
+
+def get_movies_by_year(year):
+    query = '''SELECT movieID, Movie.name, year, minutes,
+                      Movie.categoryID as categoryID,
+                      Category.name as categoryName
+               FROM Movie JOIN Category
+                      ON Movie.categoryID = Category.categoryID
+               WHERE year = ?'''
+    with closing(conn.cursor()) as c:
+        c.execute(query, (year,))
+        results = c.fetchall()
+
+    movies = []
+    for row in results:
+        movies.append(make_movie(row))
+    return movies
+
+def get_movies_by_minutes(minutes):
+    query = '''SELECT movieID, Movie.name, year, minutes,
+                      Movie.categoryID as categoryID,
+                      Category.name as categoryName
+               FROM Movie JOIN Category
+                      ON Movie.categoryID = Category.categoryID
+               WHERE minutes <= ? 
+               ORDER BY minutes ASC'''
+    with closing(conn.cursor()) as c:
+        c.execute(query, (minutes,))
+        results = c.fetchall()
+
+    movies = []
+    for row in results:
+        movies.append(make_movie(row))
+    return movies
+
+def get_movie(movie_id):
+    query = '''SELECT movieID, Movie.name, year, minutes, Movie.categoryID
+                FROM Movie
+                WHERE movieID = ?'''
+    with closing(conn.cursor()) as c:
+        c.execute(query, (movie_id,))
+        results = c.fetchall()
+        movie = []
+        for row in results:
+            movie.append(make_movie(row))
+        return movie
+
+def add_movie(movie):
+    sql = '''INSERT INTO Movie (categoryID, name, year, minutes) 
+             VALUES (?, ?, ?, ?)'''
+    with closing(conn.cursor()) as c:
+        c.execute(sql, (movie.category.id, movie.name, movie.year,
+                        movie.minutes))
+        conn.commit()
+
+def delete_movie(movie_id):
+    sql = '''DELETE FROM Movie WHERE movieID = ?'''
+    with closing(conn.cursor()) as c:
+        c.execute(sql, (movie_id,))
+        test = conn.commit()
+        print("Test", test)
 
 ## Get Data
 #-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-#
