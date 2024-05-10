@@ -1,123 +1,23 @@
 #!/usr/bin/env python3
+from player import Player
 
-import dis
-from turtle import position
-from Tyler_Creager_file_ch12 import *
-## UI
-def intro():
-
-    title = "Baseball Team Manager"
-    presentTitle = title.center(60)
-    summary = "This program calculates the batting average for a player based" "\n on the player's official number of at bats and hits."
-    
-    divider()
-    print(presentTitle)
-    print()
-    print(f"{summary:^30}")
-    print()
-    divider()
-    redo = 'y'
-    while redo == 'y':
-        displayDate()
-        redo = input("Would you like to change the date? (y/n): ").lower()
-    divider()
-
-
-def divider():
-    sep = "="
-    for i in range (100):
-        print(sep, end='')
-    print()
-
-def menu():
-
-    positions: tuple = ("C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "P")
-    placeholder:str = ""
-    players = readPlayers()
-    menuOptions = f"MENU OPTIONS:\nDisp - Display LineUp.\nAdd - Add Player.\nRemove - Remove Player.\nMove - Move Player.\nEdit - Edit Player Position\n" \
-    "Edit Stat - Edit Player Stats\nHelp - Display Commands\nExit - Exit Program"
-    print(menuOptions)
-    for i in positions:
-        if i == "P":
-            placeholder += i
-        else:
-            placeholder += i
-            placeholder += ", "
-    print(f"\nPositions: {placeholder}")
-    cont = True
-
-    while cont == True:
-        numberOfPlayers = 0 
-        for i in players:
-            numberOfPlayers += 1
-        print()
-        userInput = input("Command: ")
-        print()
-
-
-        if userInput.lower() == "disp":
-            defineTable()
-            for playerX in players:
-                displayPlayer(players[playerX])
-                print()
-            print()
-            divider()
-
-        elif userInput.lower() == "add":
-            players[numberOfPlayers] = getPlayer(positions)
-            displayPlayer(players[numberOfPlayers])
-            numberOfPlayers += 1
-            print()
-            divider()
-        
-        elif userInput.lower() == "edit":
-            editPlayerInfo(players, positions)
-            print()
-            divider()
-
-        elif userInput.lower() == "edit stat":
-            editPlayerStats(players)
-            print()
-            divider()
-        
-            
-        elif userInput.lower() == "exit":
-            print("Saving to file")
-            writePlayers(players)
-            print("Exiting! Thank you for your patronage")
-            exit_program()
-            divider()
-            cont = False
-
-        elif userInput.lower() == "help":
-            print(menuOptions)
-            divider()
-
-        else:
-            print("Unknown input please try again")
-
-## End UI
-    
 ## Player Manipulation
 # list[0] name, [1] position, [2] bats, [3] hits, [4] average
-def battingAverage(bats: int, hits: int):
-    average:float
-    try:
-        hitsF = float(hits)
-        batsF = float(bats)
-        average = hitsF / batsF
-        roundedAvg = round(average, 3)
-    except ZeroDivisionError:
-        average = 0 
-        roundedAvg = 0
-        return roundedAvg
-    except ValueError:
-        print("Invalid input")
-    return roundedAvg
 
-
-
-
+# def battingAverage(bats: int, hits: int):
+#     average:float
+#     try:
+#         hitsF = float(hits)
+#         batsF = float(bats)
+#         average = hitsF / batsF
+#         roundedAvg = round(average, 3)
+#     except ZeroDivisionError:
+#         average = 0 
+#         roundedAvg = 0
+#         return roundedAvg
+#     except ValueError:
+#         print("Invalid input")
+#     return roundedAvg
 
 def getPlayerInfo(positions:tuple, name:str, position:str):
     playerInfoValid = False
@@ -205,7 +105,7 @@ def getPlayer(positions:tuple):
     position:str =""
     bats:int = 0
     hits:int = 0
-    playerX = []
+
     
     playerInfo = getPlayerInfo(positions, name, position)
     playerStats = getPlayerStats(bats, hits)
@@ -215,17 +115,8 @@ def getPlayer(positions:tuple):
     (name, position) = playerInfo
     (bats, hits) = playerStats
 
-    avg = battingAverage(bats, hits)
-    batsStr = str(bats)
-    hitsStr = str(hits)
-    avgStr = str(avg)
+    playerX = Player(name, position, bats, hits)
 
-
-    playerX.append(name)
-    playerX.append(position)
-    playerX.append(batsStr)
-    playerX.append(hitsStr)
-    playerX.append(avgStr)
     return playerX
 
 def editPlayerInfo(players:dict, positions):
@@ -254,9 +145,8 @@ def editPlayerInfo(players:dict, positions):
             name = ""
             position = ""
             (name, position) = getPlayerInfo(positions, name, position)
-            player[0] = name
-            player[1] = position
-            players[counter] = player
+            player.name = name
+            player.position = position
             editConfirm = True
             return players
         else:
@@ -288,14 +178,9 @@ def editPlayerStats(players:dict):
             bats = 0
             hits = 0
             (bats, hits) = getPlayerStats(bats, hits)
-            average = battingAverage(bats, hits)
-            batsStr = str(bats)
-            hitsStr = str(hits)
-            averageStr = str(average)
-            player[2] = batsStr
-            player[3] = hitsStr
-            player[4] = averageStr
-            players[counter] = player
+            player.bats = bats
+            player.hits = hits
+            player.average = bats / hits
             editConfirm = True
             return players
         else:
@@ -340,28 +225,10 @@ def defineTable():
     print(f"{player:<20}{position:<20}{bats:<30}{hits:<20}{avg:<20}")
 
 # list[0] name, [1] position, [2] bats, [3] hits, [4] average
-def displayPlayer(playerX:list ):
-
-    name = playerX[0]
-    position = playerX[1]
-    bats = playerX[2]
-    hits = playerX[3]
-    avg = playerX[4]
-    readPlayer = f"{name:<20}{position:<20}{bats:<30}{hits:<20}{avg:<20}"
+def displayPlayer(playerX:Player ):
+    readPlayer = f"{playerX.name:<20}{playerX.position:<20}{playerX.bats:<30}{playerX.hits:<20}{playerX.batting_average:<20}"
     print()
     print(readPlayer)
 
 
 ## Player Manipulation End
-
-def main():
-    intro()
-    menu()
-
-
-
-
-
-if __name__ == "__main__":
-    main()
-    
