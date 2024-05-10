@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
 
 import string
+from turtle import pos
 
+class Position:
+    def __init__(self, positionID, positionSymbol, positionName):
+        self.positionID = positionID
+        self.positionSymbol = positionSymbol
+        self.positionName = positionName
 
+    def __str__(self):
+        return f"{self.positionID} {self.positionName} - ({self.positionSymbol})"
 class Player:
     def __init__(self, name, position, bats, hits):
         self.name = name

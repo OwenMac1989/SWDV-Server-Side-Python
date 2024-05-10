@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
+class Position:
+    def __init__(self, positionID, positionSymbol, positionName):
+        self.positionID = positionID
+        self.positionSymbol = positionSymbol
+        self.positionName = positionName
 
+    def __str__(self):
+        return f"{self.positionID} {self.positionName} - ({self.positionSymbol})"
 class Player:
     def __init__(self, firstName, lastName, battingOrder, position, bats, hits):
         self.firstName = firstName

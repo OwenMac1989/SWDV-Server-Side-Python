@@ -4,6 +4,7 @@ from operator import contains
 from asyncio.windows_events import NULL
 import csv
 import sys
+from turtle import position
 from objects import *
 import sqlite3
 from contextlib import closing
@@ -27,105 +28,117 @@ def close():
 def make_player(row):
     return Player(row["firstName"], row["lastName"], row["batOrder"], row["position"], row["atBats"], row["hits"])
 
+def make_position(row):
+    return Position(row["positionID"], row["positionSymbol"], row["positionName"])
 
-def get_categories():
-    query = '''SELECT categoryID, name as categoryName
-               FROM Category'''
+def get_players():
+    query = '''SELECT playerID, CONCAT(firstName + lastNam) as Name, batOrder, position, atBats, hits
+               FROM Player'''
     with closing(conn.cursor()) as c:
         c.execute(query)
         results = c.fetchall()
-
-    categories = []
+    players = []
     for row in results:
-        categories.append(make_category(row))
-    return categories
+        players.append(make_player(row))
+    return players
 
-def get_category(category_id):
+def get_positions():
+    query = '''SELECT positionID, positionSymbol as position, positionName as Name
+               FROM Position'''
+    with closing(conn.cursor()) as c:
+        c.execute(query)
+        results = c.fetchall()
+    positions = []
+    for row in results:
+        positions.append(make_position(row))
+    return positions
+
+def get_position(positionID):
     query = '''SELECT categoryID, name AS categoryName
                FROM Category WHERE categoryID = ?'''
     with closing(conn.cursor()) as c:
-        c.execute(query, (category_id,))
+        c.execute(query, (positionID,))
         row = c.fetchone()
         if row:
-            return make_category(row)
+            return make_position(row)
         else:
             return None
+## Reference for future methods
+# def get_movies_by_category(category_id):
+#     query = '''SELECT movieID, Movie.name, year, minutes,
+#                       Movie.categoryID as categoryID,
+#                       Category.name as categoryName
+#                FROM Movie JOIN Category
+#                       ON Movie.categoryID = Category.categoryID
+#                WHERE Movie.categoryID = ?'''
+#     with closing(conn.cursor()) as c:
+#         c.execute(query, (category_id,))
+#         results = c.fetchall()
 
-def get_movies_by_category(category_id):
-    query = '''SELECT movieID, Movie.name, year, minutes,
-                      Movie.categoryID as categoryID,
-                      Category.name as categoryName
-               FROM Movie JOIN Category
-                      ON Movie.categoryID = Category.categoryID
-               WHERE Movie.categoryID = ?'''
-    with closing(conn.cursor()) as c:
-        c.execute(query, (category_id,))
-        results = c.fetchall()
+#     movies = []
+#     for row in results:
+#         movies.append(make_movie(row))
+#     return movies
 
-    movies = []
-    for row in results:
-        movies.append(make_movie(row))
-    return movies
+# def get_movies_by_year(year):
+#     query = '''SELECT movieID, Movie.name, year, minutes,
+#                       Movie.categoryID as categoryID,
+#                       Category.name as categoryName
+#                FROM Movie JOIN Category
+#                       ON Movie.categoryID = Category.categoryID
+#                WHERE year = ?'''
+#     with closing(conn.cursor()) as c:
+#         c.execute(query, (year,))
+#         results = c.fetchall()
 
-def get_movies_by_year(year):
-    query = '''SELECT movieID, Movie.name, year, minutes,
-                      Movie.categoryID as categoryID,
-                      Category.name as categoryName
-               FROM Movie JOIN Category
-                      ON Movie.categoryID = Category.categoryID
-               WHERE year = ?'''
-    with closing(conn.cursor()) as c:
-        c.execute(query, (year,))
-        results = c.fetchall()
+#     movies = []
+#     for row in results:
+#         movies.append(make_movie(row))
+#     return movies
 
-    movies = []
-    for row in results:
-        movies.append(make_movie(row))
-    return movies
+# def get_movies_by_minutes(minutes):
+#     query = '''SELECT movieID, Movie.name, year, minutes,
+#                       Movie.categoryID as categoryID,
+#                       Category.name as categoryName
+#                FROM Movie JOIN Category
+#                       ON Movie.categoryID = Category.categoryID
+#                WHERE minutes <= ? 
+#                ORDER BY minutes ASC'''
+#     with closing(conn.cursor()) as c:
+#         c.execute(query, (minutes,))
+#         results = c.fetchall()
 
-def get_movies_by_minutes(minutes):
-    query = '''SELECT movieID, Movie.name, year, minutes,
-                      Movie.categoryID as categoryID,
-                      Category.name as categoryName
-               FROM Movie JOIN Category
-                      ON Movie.categoryID = Category.categoryID
-               WHERE minutes <= ? 
-               ORDER BY minutes ASC'''
-    with closing(conn.cursor()) as c:
-        c.execute(query, (minutes,))
-        results = c.fetchall()
+#     movies = []
+#     for row in results:
+#         movies.append(make_movie(row))
+#     return movies
 
-    movies = []
-    for row in results:
-        movies.append(make_movie(row))
-    return movies
+# def get_movie(movie_id):
+#     query = '''SELECT movieID, Movie.name, year, minutes, Movie.categoryID
+#                 FROM Movie
+#                 WHERE movieID = ?'''
+#     with closing(conn.cursor()) as c:
+#         c.execute(query, (movie_id,))
+#         results = c.fetchall()
+#         movie = []
+#         for row in results:
+#             movie.append(make_movie(row))
+#         return movie
 
-def get_movie(movie_id):
-    query = '''SELECT movieID, Movie.name, year, minutes, Movie.categoryID
-                FROM Movie
-                WHERE movieID = ?'''
-    with closing(conn.cursor()) as c:
-        c.execute(query, (movie_id,))
-        results = c.fetchall()
-        movie = []
-        for row in results:
-            movie.append(make_movie(row))
-        return movie
+# def add_movie(movie):
+#     sql = '''INSERT INTO Movie (categoryID, name, year, minutes) 
+#              VALUES (?, ?, ?, ?)'''
+#     with closing(conn.cursor()) as c:
+#         c.execute(sql, (movie.category.id, movie.name, movie.year,
+#                         movie.minutes))
+#         conn.commit()
 
-def add_movie(movie):
-    sql = '''INSERT INTO Movie (categoryID, name, year, minutes) 
-             VALUES (?, ?, ?, ?)'''
-    with closing(conn.cursor()) as c:
-        c.execute(sql, (movie.category.id, movie.name, movie.year,
-                        movie.minutes))
-        conn.commit()
-
-def delete_movie(movie_id):
-    sql = '''DELETE FROM Movie WHERE movieID = ?'''
-    with closing(conn.cursor()) as c:
-        c.execute(sql, (movie_id,))
-        test = conn.commit()
-        print("Test", test)
+# def delete_movie(movie_id):
+#     sql = '''DELETE FROM Movie WHERE movieID = ?'''
+#     with closing(conn.cursor()) as c:
+#         c.execute(sql, (movie_id,))
+#         test = conn.commit()
+#         print("Test", test)
 
 ## Get Data
 #-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-##-#-#-#-#-#
