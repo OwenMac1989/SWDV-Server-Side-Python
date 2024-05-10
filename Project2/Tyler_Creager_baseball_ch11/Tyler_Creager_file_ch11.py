@@ -2,12 +2,10 @@
 from ast import While
 from asyncio.windows_events import NULL
 import csv
-import dis
 from operator import contains
 import sys
 from datetime import date
-from unittest import result
-from xmlrpc.client import DateTime
+
 
 FILENAME = "players.csv"
 
